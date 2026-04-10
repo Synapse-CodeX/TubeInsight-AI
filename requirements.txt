@@ -1,0 +1,42 @@
+# ─── Core LLM & Agent Stack ───────────────────────────────────────────────────
+langchain>=0.3.0
+langgraph>=0.2.0
+langchain-community>=0.3.0
+langchain-chroma>=0.1.0
+
+# ─── YouTube Data ─────────────────────────────────────────────────────────────
+google-api-python-client>=2.140.0
+google-auth>=2.35.0
+
+# ─── Vector Store & Embeddings ────────────────────────────────────────────────
+chromadb>=0.5.0
+openai>=1.51.0                    # OpenAI-compatible client for OpenRouter/Ollama
+
+# ─── Sentiment & NLP ──────────────────────────────────────────────────────────
+bertopic>=0.16.0
+sentence-transformers>=3.1.0
+scikit-learn>=1.5.0
+nltk>=3.9.0
+
+# ─── Frontend ─────────────────────────────────────────────────────────────────
+# (Streamlit removed - now using Next.js frontend)
+
+# ─── API Layer ────────────────────────────────────────────────────────────────
+fastapi>=0.115.0
+uvicorn>=0.31.0
+pydantic>=2.9.0
+pydantic-settings>=2.5.0
+
+# ─── Caching & Storage ────────────────────────────────────────────────────────
+diskcache>=5.6.0
+
+# ─── Utils ────────────────────────────────────────────────────────────────────
+python-dotenv>=1.0.0
+httpx>=0.27.0
+tenacity>=9.0.0               # Retry logic for API calls
+rich>=13.8.0                  # Pretty CLI output
+loguru>=0.7.0
+
+# ─── Testing ──────────────────────────────────────────────────────────────────
+pytest>=8.3.0
+pytest-asyncio>=0.24.0
