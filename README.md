@@ -1,181 +1,906 @@
 # 🎯 TubeInsight AI
 
-> **AI-powered YouTube comment intelligence platform** — built for creators who want to truly understand their audience.
+> **AI-powered YouTube Comment Intelligence Platform** — transform raw audience comments into actionable insights about sentiment, topics, audience behavior, and content performance.
 
-[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/)
-[![LangGraph](https://img.shields.io/badge/orchestration-LangGraph-green)](https://github.com/langchain-ai/langgraph)
-[![LLM](https://img.shields.io/badge/LLM-OpenRouter%20%7C%20Ollama-orange)](https://openrouter.ai/)
-[![Next.js](https://img.shields.io/badge/frontend-Next.js-black)](https://nextjs.org/)
-[![FastAPI](https://img.shields.io/badge/backend-FastAPI-teal)](https://fastapi.tiangolo.com/)
-
----
-
-## 🧠 What Is This?
-
-TubeInsight AI is a creator intelligence dashboard that transforms raw YouTube comment data into structured, actionable insight using:
-
-- **Multi-agent AI orchestration** via LangGraph
-- **RAG-powered chatbot** — ask natural questions about your audience
-- **Sentiment + vibe analysis** per video and across your channel
-- **Topic clustering** to surface what viewers actually care about
-- **AI-generated insight reports** per video
+[![Python](https://img.shields.io/badge/Python-3.12%2B-blue.svg)](https://www.python.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688.svg)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-TypeScript-61DAFB.svg)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-Frontend-646CFF.svg)](https://vitejs.dev/)
+[![LangGraph](https://img.shields.io/badge/LangGraph-Agent%20Orchestration-green.svg)](https://github.com/langchain-ai/langgraph)
+[![ChromaDB](https://img.shields.io/badge/ChromaDB-Vector%20Store-purple.svg)](https://www.trychroma.com/)
+[![OpenRouter](https://img.shields.io/badge/LLM-OpenRouter-orange.svg)](https://openrouter.ai/)
+[![YouTube API](https://img.shields.io/badge/YouTube-Data%20API%20v3-red.svg)](https://developers.google.com/youtube/v3)
 
 ---
 
-## 🗂️ Project Structure
+## 🧠 What Is TubeInsight AI?
 
+**TubeInsight AI** is an AI-powered YouTube audience intelligence platform designed to help creators understand what their viewers are actually saying.
+
+Instead of manually reading hundreds of comments, TubeInsight AI processes YouTube comment data through a multi-agent AI pipeline and converts it into structured intelligence.
+
+The platform combines:
+
+- 🤖 **Multi-agent AI orchestration**
+- 💬 **YouTube comment analysis**
+- ❤️ **Sentiment and audience-vibe analysis**
+- 🧠 **Topic discovery and clustering**
+- 🔎 **RAG-powered conversational analysis**
+- 📊 **AI-generated insight reports**
+- ⚡ **Streaming analysis progress**
+- 🔐 **Local demo authentication**
+- 📎 **File attachment support in the frontend**
+
+---
+
+# ✨ Core Features
+
+## 🤖 Multi-Agent AI Analysis
+
+TubeInsight AI uses a LangGraph-based orchestration layer to coordinate specialized agents.
+
+Instead of asking a single LLM to perform the entire analysis, the workload is divided into focused components.
+
+### Agents
+
+| Agent | Responsibility |
+|---|---|
+| `OrchestratorAgent` | Coordinates the complete analysis workflow |
+| `DataAgent` | Fetches and prepares YouTube video/comment data |
+| `SentimentAgent` | Analyzes sentiment, emotion, and audience response |
+| `TopicAgent` | Identifies recurring themes and discussion topics |
+| `RAGAgent` | Provides conversational retrieval over analyzed data |
+| `ReportAgent` | Produces the final AI-generated insight report |
+
+---
+
+# 📊 What TubeInsight AI Can Extract
+
+Given a YouTube video, the system can transform raw comments into structured insights such as:
+
+### ❤️ Audience Sentiment
+
+Understand whether viewers are responding positively, negatively, or neutrally.
+
+### 🔥 Audience Vibe
+
+Identify the overall emotional tone and energy surrounding the discussion.
+
+### 🧠 Topic Discovery
+
+Surface recurring themes and discussion clusters appearing throughout the comments.
+
+### 💬 Audience Questions
+
+Identify what viewers are asking, discussing, or struggling with.
+
+### 📈 Content Insights
+
+Generate higher-level observations from the combined comment analysis.
+
+### 🤖 AI Report
+
+Generate a natural-language report summarizing the most important audience signals.
+
+---
+
+# 🔎 RAG-Powered Audience Chat
+
+TubeInsight AI includes a retrieval-augmented generation pipeline that allows creators to ask questions about their analyzed audience.
+
+Instead of manually searching through comments, users can interact with the analysis conversationally.
+
+Example questions:
+
+```text
+What are viewers complaining about the most?
+
+What topics are people most interested in?
+
+What did viewers like about this video?
+
+What questions are repeatedly being asked?
+
+What should I improve in my next video?
+````
+
+The RAG layer uses vector embeddings and ChromaDB to retrieve relevant information before sending context to the LLM.
+
+---
+
+# 🏗️ System Architecture
+
+```text
+                         ┌───────────────────────────┐
+                         │       React Frontend      │
+                         │    Vite + TypeScript      │
+                         │                           │
+                         │  Dashboard / Auth / Chat  │
+                         └─────────────┬─────────────┘
+                                       │
+                              REST API / SSE
+                                       │
+                                       ▼
+                         ┌───────────────────────────┐
+                         │       FastAPI API         │
+                         │                           │
+                         │       api.py              │
+                         └─────────────┬─────────────┘
+                                       │
+                                       ▼
+                         ┌───────────────────────────┐
+                         │   LangGraph Orchestrator  │
+                         └─────────────┬─────────────┘
+                                       │
+                ┌──────────────┬───────┼───────┬──────────────┐
+                │              │       │       │              │
+                ▼              ▼       ▼       ▼              ▼
+          ┌──────────┐   ┌──────────┐ ┌──────┐ ┌──────────┐ ┌──────────┐
+          │   Data   │   │Sentiment │ │Topic │ │   RAG    │ │ Report   │
+          │  Agent   │   │  Agent   │ │Agent │ │  Agent   │ │  Agent   │
+          └────┬─────┘   └────┬─────┘ └──┬───┘ └────┬─────┘ └────┬─────┘
+               │              │          │           │            │
+               ▼              ▼          ▼           ▼            ▼
+        YouTube Data       NLP/LLM   Embeddings   ChromaDB      LLM
+             API
 ```
+
+---
+
+# 🔄 Analysis Pipeline
+
+```text
+                    YouTube Video URL
+                           │
+                           ▼
+                  ┌─────────────────┐
+                  │   Data Agent    │
+                  │                 │
+                  │ Fetch metadata  │
+                  │ Fetch comments  │
+                  └────────┬────────┘
+                           │
+                           ▼
+                  ┌─────────────────┐
+                  │ Preprocessing   │
+                  │                 │
+                  │ Clean comments  │
+                  │ Normalize data  │
+                  └────────┬────────┘
+                           │
+              ┌────────────┼────────────┐
+              │            │            │
+              ▼            ▼            ▼
+        Sentiment       Topic        Embedding
+         Analysis      Analysis       Pipeline
+              │            │            │
+              │            │            ▼
+              │            │        ChromaDB
+              │            │            │
+              └────────────┼────────────┘
+                           │
+                           ▼
+                  ┌─────────────────┐
+                  │  RAG / Report   │
+                  │     Agents      │
+                  └────────┬────────┘
+                           │
+                           ▼
+                  AI Audience Report
+```
+
+---
+
+# 🧩 Project Structure
+
+```text
 tubeinsight-ai/
-├── frontend/                   # Next.js + shadcn/ui frontend
-│   ├── app/                    # Next.js app router
-│   │   ├── page.tsx            # Home page (URL input)
-│   │   ├── layout.tsx          # Root layout
-│   │   └── dashboard/          # Dashboard page
-│   │       └── page.tsx
-│   ├── components/             # React components
-│   │   └── ui/                 # shadcn/ui components
-│   ├── lib/
-│   │   └── utils.ts            # Utility functions
-│   ├── package.json
-│   ├── tailwind.config.ts
-│   └── next.config.js
 │
 ├── backend/
-│   ├── agents/                 # LangGraph agents
-│   │   ├── orchestrator.py     # Master agent router
-│   │   ├── data_agent.py       # YouTube data ingestion
-│   │   ├── sentiment_agent.py  # Emotion + vibe scoring
-│   │   ├── topic_agent.py      # Comment clustering
-│   │   ├── rag_agent.py        # RAG chat interface
-│   │   └── report_agent.py     # Insight report generation
+│   ├── agents/
+│   │   ├── orchestrator.py
+│   │   ├── data_agent.py
+│   │   ├── sentiment_agent.py
+│   │   ├── topic_agent.py
+│   │   ├── rag_agent.py
+│   │   └── report_agent.py
 │   │
-│   └── core/                   # Core business logic
-│       ├── youtube_client.py   # YouTube API wrapper
-│       ├── embeddings.py       # Embedding pipeline
-│       ├── vectorstore.py      # ChromaDB interface
-│       └── llm_client.py       # OpenRouter / Ollama wrapper
-│
-├── api.py                      # FastAPI backend entry point
-├── data/
-│   └── vectorstore/            # ChromaDB persistent storage
+│   ├── core/
+│   │   ├── youtube_client.py
+│   │   ├── embeddings.py
+│   │   ├── vectorstore.py
+│   │   └── llm_client.py
+│   │
+│   └── utils/
+│       └── preprocessing.py
 │
 ├── config/
-│   ├── settings.py             # Pydantic settings
-│   └── prompts.py              # All LLM prompt templates
+│   ├── settings.py
+│   └── prompts.py
 │
-├── .env.example
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   ├── contexts/
+│   │   │   └── AuthContext.tsx
+│   │   │
+│   │   ├── pages/
+│   │   │   ├── Dashboard.tsx
+│   │   │   ├── SignIn.tsx
+│   │   │   └── SignUp.tsx
+│   │   │
+│   │   ├── App.tsx
+│   │   └── ...
+│   │
+│   ├── package.json
+│   ├── package-lock.json
+│   └── vite.config.ts
+│
+├── data/
+│   ├── raw/
+│   └── vectorstore/
+│
+├── api.py
 ├── requirements.txt
+├── .env.example
+├── .gitignore
 └── README.md
 ```
 
 ---
 
-## ⚡ Quickstart
+# 🛠️ Tech Stack
 
-```bash
-# 1. Clone and setup
-git clone https://github.com/yourname/tubeinsight-ai
-cd tubeinsight-ai
+| Layer               | Technology                          |
+| ------------------- | ----------------------------------- |
+| Frontend            | React + TypeScript                  |
+| Frontend Build Tool | Vite                                |
+| UI                  | Tailwind CSS + component primitives |
+| Backend             | FastAPI                             |
+| API Server          | Uvicorn                             |
+| Agent Orchestration | LangGraph                           |
+| LLM Gateway         | OpenAI-compatible client            |
+| LLM Provider        | OpenRouter                          |
+| YouTube Data        | YouTube Data API v3                 |
+| Embeddings          | Sentence Transformers               |
+| Embedding Model     | `all-MiniLM-L6-v2`                  |
+| Vector Database     | ChromaDB                            |
+| Topic Modeling      | BERTopic / clustering pipeline      |
+| NLP                 | NLTK + scikit-learn                 |
+| Caching             | DiskCache                           |
+| Configuration       | Pydantic Settings                   |
+| Validation          | Pydantic                            |
+| Testing             | Pytest                              |
+| Retry Handling      | Tenacity                            |
+| Logging             | Loguru                              |
 
-# 2. Install Python dependencies
-pip install -r requirements.txt
+---
 
-# 3. Install frontend dependencies
-cd frontend && npm install && cd ..
+# 🤖 LLM Architecture
 
-# 4. Configure environment
-cp .env.example .env
-# Fill in: YOUTUBE_API_KEY and OPENROUTER_API_KEY
-# Or set OLLAMA_BASE_URL to use a local model instead
+The project uses an OpenAI-compatible client abstraction so the LLM provider can be changed without rewriting the agent layer.
 
-# 5. Run the backend (in one terminal)
-uvicorn api:app --reload
+Current development configuration:
 
-# 6. Run the frontend (in another terminal)
-cd frontend && npm run dev
+```text
+TubeInsight AI
+       │
+       ▼
+   LLMClient
+       │
+       ▼
+ OpenRouter API
+       │
+       ▼
+ Configured LLM Model
+```
 
-# 7. Open http://localhost:3000 in your browser
+The LLM client is responsible for:
+
+* API communication
+* Retry handling
+* Rate limiting
+* Standard completions
+* JSON responses
+* Multi-turn conversation history
+* Provider abstraction
+
+---
+
+# 📡 API
+
+The backend is powered by FastAPI.
+
+## Health Check
+
+```http
+GET /health
+```
+
+Example:
+
+```json
+{
+  "status": "ok"
+}
 ```
 
 ---
 
-## 🤖 Agent Architecture
+## Analyze Video
 
-```
-User Input (video URL)
-        │
-        ▼
-  Orchestrator Agent  (LangGraph StateGraph)
-        │
-   ┌────┼────┬────────┬──────────┐
-   ▼    ▼    ▼        ▼          ▼
- Data  Sent Topic    RAG       Report
-Agent  Agent Agent   Agent     Agent
+```http
+POST /analyze
 ```
 
-| Agent | Responsibility |
-|---|---|
-| `DataAgent` | Fetch comments + metadata via YouTube API |
-| `SentimentAgent` | Score emotion, toxicity, hype, likeness |
-| `TopicAgent` | Cluster comments into themes via embeddings |
-| `RAGAgent` | Answer creator questions about their content |
-| `ReportAgent` | Generate the final written insight summary |
+Example request:
+
+```json
+{
+  "youtube_url": "https://www.youtube.com/watch?v=VIDEO_ID"
+}
+```
+
+The endpoint starts the YouTube intelligence pipeline and returns the generated analysis.
 
 ---
 
-## 🔑 Environment Variables
+## Streaming Analysis
+
+```http
+POST /analyze/stream
+```
+
+The frontend can consume analysis progress through Server-Sent Events (SSE).
+
+Conceptually:
+
+```text
+Frontend
+   │
+   │ POST /analyze/stream
+   ▼
+FastAPI
+   │
+   ├── Data collection
+   ├── Sentiment analysis
+   ├── Topic analysis
+   ├── Embeddings
+   ├── RAG preparation
+   └── Report generation
+   │
+   ▼
+SSE progress events
+   │
+   ▼
+Frontend progress UI
+```
+
+---
+
+## Channel Videos
+
+```http
+POST /channel/videos
+```
+
+Used to retrieve videos associated with a YouTube channel.
+
+---
+
+## RAG Chat
+
+```http
+POST /chat
+```
+
+Example:
+
+```json
+{
+  "query": "What are viewers complaining about the most?"
+}
+```
+
+The RAG agent retrieves relevant context from the vector store before generating the response.
+
+---
+
+# 🔐 Authentication
+
+TubeInsight AI currently includes a **local demo authentication system**.
+
+The frontend provides:
+
+```text
+Sign Up
+   │
+   ▼
+Create Demo Account
+   │
+   ▼
+Persist Session
+   │
+   ▼
+Dashboard
+```
+
+And:
+
+```text
+Sign In
+   │
+   ▼
+Validate Demo Credentials
+   │
+   ▼
+Create Session
+   │
+   ▼
+Dashboard
+```
+
+Authentication currently uses browser `localStorage` for development/demo purposes.
+
+Stored data includes:
+
+```text
+tubeinsight_demo_users
+tubeinsight_demo_session
+```
+
+### Important
+
+This authentication system is intended for **development/demo use**.
+
+It is **not a production authentication system** and should be replaced with a proper authentication provider/backend implementation before handling real user accounts or sensitive information.
+
+---
+
+# 📎 File Attachment
+
+The dashboard includes an attachment control that opens the browser's native file picker.
+
+Currently supported frontend file types include:
+
+```text
+.txt
+.csv
+.json
+.md
+.pdf
+.png
+.jpg
+.jpeg
+.webp
+```
+
+The current implementation displays the selected filename in the UI.
+
+The attachment control is currently a **frontend interaction**; it does not represent a backend file-upload pipeline.
+
+---
+
+# ⚙️ Environment Variables
+
+Create a `.env` file in the project root.
+
+Example:
 
 ```env
-YOUTUBE_API_KEY=your_key_here
-OPENROUTER_API_KEY=your_key_here
-OLLAMA_BASE_URL=http://localhost:11434  # Optional alternative to OpenRouter
+# ─────────────────────────────────────────────
+# YouTube
+# ─────────────────────────────────────────────
+
+YOUTUBE_API_KEY=your_youtube_api_key
+
+
+# ─────────────────────────────────────────────
+# LLM
+# ─────────────────────────────────────────────
+
+OPENROUTER_API_KEY=your_openrouter_api_key
+
+USE_LOCAL_LLM=false
+
+LLM_MODEL=your_openrouter_model
+
+
+# ─────────────────────────────────────────────
+# Optional Local Ollama Configuration
+# ─────────────────────────────────────────────
+
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=gemma3:1b
+
+
+# ─────────────────────────────────────────────
+# Embeddings
+# ─────────────────────────────────────────────
+
+SENTENCE_TRANSFORMER_MODEL=all-MiniLM-L6-v2
+
+
+# ─────────────────────────────────────────────
+# Storage
+# ─────────────────────────────────────────────
+
 CHROMA_PERSIST_DIR=./data/vectorstore
-CACHE_DIR=./data/processed
-MAX_COMMENTS_PER_VIDEO=500
+RAW_DATA_DIR=./data/raw
+
+
+# ─────────────────────────────────────────────
+# Ingestion
+# ─────────────────────────────────────────────
+
+MAX_COMMENTS_PER_VIDEO=100
+MAX_VIDEOS_PER_CHANNEL=10
+
+
+# ─────────────────────────────────────────────
+# Application
+# ─────────────────────────────────────────────
+
+APP_ENV=development
+LOG_LEVEL=INFO
+```
+
+> **Never commit `.env` or API keys to GitHub.**
+
+---
+
+# 🔑 Getting API Keys
+
+## YouTube Data API
+
+TubeInsight AI uses the **YouTube Data API v3** to retrieve video and comment information.
+
+Create a Google Cloud project, enable the YouTube Data API v3, and generate an API key.
+
+---
+
+## OpenRouter
+
+TubeInsight AI currently uses OpenRouter for cloud-based LLM inference.
+
+Add your OpenRouter API key to:
+
+```env
+OPENROUTER_API_KEY=your_key_here
+```
+
+The configured model is controlled through:
+
+```env
+LLM_MODEL=your_model_id
 ```
 
 ---
 
-## 📦 Tech Stack
+# 🚀 Local Development
 
-| Layer | Tech |
-|---|---|
-| Frontend | Next.js 14 + shadcn/ui + Tailwind CSS |
-| Backend API | FastAPI + uvicorn |
-| Agent Orchestration | LangGraph |
-| LLM | OpenRouter or local Ollama |
-| Embeddings | sentence-transformers `all-MiniLM-L6-v2` |
-| Vector DB | ChromaDB |
-| YouTube Data | YouTube Data API v3 |
-| Sentiment Baseline | VADER + LLM refinement |
-| Topic Modeling | BERTopic / KMeans |
-| Caching | diskcache |
-| Config | Pydantic Settings |
+## 1. Clone the Repository
 
----
-
-## 🚀 Run Instructions
-
-### Backend
 ```bash
-uvicorn api:app --reload
+git clone https://github.com/YOUR_USERNAME/tubeinsight-ai.git
+
+cd tubeinsight-ai
 ```
-The API will be available at `http://localhost:8000`
+
+---
+
+# 🐍 2. Create Python Environment
+
+Recommended:
+
+```bash
+py -3.12 -m venv .venv
+```
+
+Activate on Windows PowerShell:
+
+```powershell
+.venv\Scripts\Activate.ps1
+```
+
+Verify:
+
+```bash
+python --version
+```
+
+---
+
+# 📦 3. Install Backend Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+# 🔐 4. Configure Environment
+
+Create:
+
+```text
+.env
+```
+
+from:
+
+```text
+.env.example
+```
+
+Then configure:
+
+```env
+YOUTUBE_API_KEY=...
+OPENROUTER_API_KEY=...
+```
+
+---
+
+# 🖥️ 5. Start Backend
+
+From the project root:
+
+```bash
+python -m uvicorn api:app --reload
+```
+
+Backend:
+
+```text
+http://localhost:8000
+```
+
+Health check:
+
+```text
+http://localhost:8000/health
+```
+
+Expected response:
+
+```json
+{
+  "status": "ok"
+}
+```
+
+---
+
+# 🌐 6. Install Frontend Dependencies
+
+Open a second terminal:
+
+```bash
+cd frontend
+npm install
+```
+
+---
+
+# ▶️ 7. Start Frontend
+
+```bash
+npm run dev
+```
+
+The Vite development server will start at:
+
+```text
+http://localhost:3000
+```
+
+---
+
+# 🏭 Production Frontend Build
+
+To generate a production build:
+
+```bash
+cd frontend
+npm run build
+```
+
+To preview the production build locally:
+
+```bash
+npm run preview
+```
+
+---
+
+# 🧪 Testing & Validation
+
+Backend tests:
+
+```bash
+pytest
+```
+
+Frontend TypeScript validation:
+
+```bash
+cd frontend
+npx tsc --noEmit
+```
+
+Frontend production build:
+
+```bash
+npm run build
+```
+
+Git whitespace validation:
+
+```bash
+git diff --check
+```
+
+---
+
+# 🔒 Security Notes
+
+The following files/directories should remain local:
+
+```text
+.env
+.venv/
+venv/
+data/raw/
+data/vectorstore/
+frontend/dist/
+```
+
+They are excluded through `.gitignore`.
+
+Never expose:
+
+```text
+YOUTUBE_API_KEY
+OPENROUTER_API_KEY
+```
+
+in frontend code or commit them to the repository.
+
+API keys should only be accessed by the backend.
+
+---
+
+# 📈 Future Improvements
+
+Planned improvements include:
+
+* [ ] Production-grade authentication
+* [ ] Persistent user accounts
+* [ ] Cloud database integration
+* [ ] Production vector-store infrastructure
+* [ ] Advanced creator analytics
+* [ ] Historical channel-level analysis
+* [ ] Video-to-video comparison
+* [ ] Audience trend tracking
+* [ ] Exportable PDF reports
+* [ ] Advanced recommendation engine
+* [ ] Production file-upload pipeline
+* [ ] Background analysis jobs
+* [ ] Deployment monitoring
+* [ ] Improved API rate-limit handling
+* [ ] Production observability
+
+---
+
+# 🚀 Deployment Architecture
+
+The intended deployment architecture separates the frontend and backend.
+
+```text
+                    Internet
+                       │
+              ┌────────┴────────┐
+              │                 │
+              ▼                 ▼
+        ┌───────────┐     ┌────────────┐
+        │  Vercel   │     │   Render   │
+        │           │     │            │
+        │ React     │────▶│ FastAPI    │
+        │ Frontend  │ API │ Backend    │
+        └───────────┘     └─────┬──────┘
+                                │
+                    ┌───────────┼───────────┐
+                    │           │           │
+                    ▼           ▼           ▼
+                YouTube     OpenRouter   ChromaDB
+                   API          API
+```
 
 ### Frontend
-```bash
-cd frontend && npm run dev
+
+Planned platform:
+
+**Vercel**
+
+The Vite React frontend will be deployed as a production static application.
+
+### Backend
+
+Planned platform:
+
+**Render**
+
+The FastAPI backend will run as a web service.
+
+Environment variables such as:
+
+```text
+YOUTUBE_API_KEY
+OPENROUTER_API_KEY
+LLM_MODEL
+CHROMA_PERSIST_DIR
 ```
-The app will be available at `http://localhost:3000`
 
-### API Endpoints
-
-- `GET /health` - Health check
-- `POST /analyze` - Analyze a YouTube video (accepts `{ "youtube_url": "..." }`)
-- `POST /chat` - Chat with RAG (accepts `{ "query": "..." }`)
+will be configured through the deployment platform rather than committed to GitHub.
 
 ---
 
-## 📄 License
+# 🌟 Why TubeInsight AI?
 
-MIT License - feel free to use this for your own projects!
+YouTube generates enormous amounts of audience feedback.
+
+The challenge isn't collecting comments.
+
+The challenge is **understanding them at scale**.
+
+TubeInsight AI transforms:
+
+```text
+Raw YouTube Comments
+        │
+        ▼
+Data Collection
+        │
+        ▼
+Preprocessing
+        │
+        ▼
+Multi-Agent AI Analysis
+        │
+        ├── Sentiment
+        ├── Topics
+        ├── Audience Vibe
+        ├── Questions
+        └── Behavioral Signals
+        │
+        ▼
+Vector Knowledge Base
+        │
+        ▼
+RAG + AI Reasoning
+        │
+        ▼
+Actionable Creator Intelligence
+```
+
+The goal is to move creators from:
+
+> **"I have thousands of comments."**
+
+to:
+
+> **"I understand what my audience is telling me."**
+
+---
+
+# 📄 License
+
+This project is licensed under the MIT License.
+
+See the `LICENSE` file for details.
+
+---
+
+
+

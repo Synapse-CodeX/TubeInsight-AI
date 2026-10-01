@@ -8,6 +8,17 @@ venv/
 # Python cache
 __pycache__/
 *.pyc
+.pytest_cache/
+
+# Node
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# Build / coverage
+dist/
+build/
+coverage/
 
 # IDE
 .vscode/
@@ -15,3 +26,7 @@ __pycache__/
 # Data folders
 data/raw/
 data/vectorstore/
+
+# OS
+.DS_Store
+Thumbs.db

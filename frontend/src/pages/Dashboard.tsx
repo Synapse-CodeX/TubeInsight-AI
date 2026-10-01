@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { 
   Search, 
   Paperclip, 
@@ -15,7 +15,7 @@ import {
   AlertCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useAnalysis, useAnalysisHistory, useSettings } from "@/hooks/use-analysis";
 import { SettingsPanel } from "@/components/settings-panel";
@@ -34,11 +34,19 @@ const Dashboard = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const [view, setView] = useState<"input" | "results">("input");
+  const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const { settings } = useSettings();
   const { results, isLoading, error, progress, videoPreview, analyze, analyzeWithProgress, clearResults } = useAnalysis();
   const { history, removeFromHistory, clearHistory } = useAnalysisHistory();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/signin", { replace: true });
+  };
 
   const [showVideoSelection, setShowVideoSelection] = useState(false);
   const [channelVideos, setChannelVideos] = useState<ChannelVideo[]>([]);
@@ -197,7 +205,7 @@ const Dashboard = () => {
               <span className="text-[10px] text-white/40 uppercase tracking-wider">Early Access</span>
             </div>
           </div>
-            <Button onClick={signOut} className="w-full justify-start gap-3 bg-transparent text-red-500/70 hover:text-red-500 hover:bg-red-500/10">
+            <Button onClick={handleSignOut} className="w-full justify-start gap-3 bg-transparent text-red-500/70 hover:text-red-500 hover:bg-red-500/10">
             <LogOut size={18} />
             Sign Out
           </Button>
@@ -265,10 +273,31 @@ const Dashboard = () => {
                     
                     <div className="flex items-center justify-between mt-2 pt-2 border-t border-white/5">
                       <div className="flex items-center gap-2">
-                        <Button type="button" className="h-9 rounded-full px-3 bg-transparent gap-2 text-white/50 hover:text-white hover:bg-white/5">
+                        <input
+                          ref={fileInputRef}
+                          type="file"
+                          accept=".txt,.csv,.json,.md,.pdf,.png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp"
+                          className="hidden"
+                          onChange={(event) => {
+                            const file = event.target.files?.[0];
+                            if (file) {
+                              setSelectedFileName(file.name);
+                            }
+                          }}
+                        />
+                        <Button
+                          type="button"
+                          onClick={() => fileInputRef.current?.click()}
+                          className="h-9 rounded-full px-3 bg-transparent gap-2 text-white/50 hover:text-white hover:bg-white/5"
+                        >
                           <Paperclip size={16} />
                           Attach
                         </Button>
+                        {selectedFileName && (
+                          <span className="max-w-[180px] truncate text-xs text-white/50" title={selectedFileName}>
+                            {selectedFileName}
+                          </span>
+                        )}
                         <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 text-white/50 text-xs">
                           <Globe size={14} />
                           <span>Max: {settings.max_comments} comments</span>
