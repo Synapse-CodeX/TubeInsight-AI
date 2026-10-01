@@ -1,6 +1,7 @@
 import { AnalyzeRequest, AnalyzeResponse, ChatRequest, ChatResponse, HealthResponse, ChannelVideosRequest, ChannelVideosResponse, ProgressEvent } from './types';
 
-const API_BASE_URL = 'http://localhost:8000';
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 export class APIError extends Error {
   status?: number;

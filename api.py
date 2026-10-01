@@ -8,6 +8,7 @@ Exposes the LangGraph agent pipeline and RAG chat as REST endpoints.
 
 import sys
 import json
+import os
 from datetime import datetime
 from typing import Optional, Generator
 from contextlib import asynccontextmanager
@@ -287,10 +288,21 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# Enable CORS for Next.js frontend
+local_frontend_origins = [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+configured_frontend_origins = [
+    origin.strip()
+    for origin in os.getenv("FRONTEND_URL", "").split(",")
+    if origin.strip()
+]
+
+# Enable local development origins plus the configured Vercel frontend.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=[*local_frontend_origins, *configured_frontend_origins],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

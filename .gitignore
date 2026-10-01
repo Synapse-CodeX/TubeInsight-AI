@@ -4,6 +4,11 @@ venv/
 
 # Environment variables
 .env
+.env.*
+!.env.example
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
 
 # Python cache
 __pycache__/
