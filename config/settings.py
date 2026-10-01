@@ -23,16 +23,15 @@ class Settings(BaseSettings):
     
     # ── API Keys ──────────────────────────────────────────────────────────────
     youtube_api_key: str = Field(env="YOUTUBE_API_KEY")
-    openrouter_api_key: str = Field(env="OPENROUTER_API_KEY")  # Required unless using Ollama
-    llm_api_key: str = Field("", env="llm_api_key")
+    groq_api_key: str = Field("", env="GROQ_API_KEY")
 
     # ── Model Config ──────────────────────────────────────────────────────────
-    # Set OLLAMA_BASE_URL to use local Ollama instead of OpenRouter
+    llm_request_timeout_seconds: float = Field(60.0, env="LLM_REQUEST_TIMEOUT_SECONDS")
+    # Set USE_LOCAL_LLM=true to use local Ollama instead of Groq
     # Example: OLLAMA_BASE_URL=http://localhost:11434
     ollama_base_url: str = Field("", env="OLLAMA_BASE_URL")
     ollama_model: str = Field("", env="OLLAMA_MODEL")
-    # OpenRouter model ID (used if OLLAMA_BASE_URL is not set)
-    llm_model: str = Field(env="LLM_MODEL")
+    llm_model: str = Field("openai/gpt-oss-20b", env="LLM_MODEL")
 
     # ── Storage ───────────────────────────────────────────────────────────────
     chroma_persist_dir: str = Field(env="CHROMA_PERSIST_DIR")
@@ -49,6 +48,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
+        extra = "ignore"
 
 
 @lru_cache()

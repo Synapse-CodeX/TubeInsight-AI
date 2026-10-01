@@ -70,7 +70,7 @@ Empower YouTube creators with AI-driven audience intelligence — turning thousa
 ┌────────────▼─────────────────────────┐
 │         CORE SERVICES                │
 │  - YouTube Client (API v3)           │
-│  - LLM Client (OpenRouter/Ollama)    │
+│  - LLM Client (Groq/Ollama)          │
 │  - Embedding Client (sentence-transformers)
 │  - VectorStore (ChromaDB)            │
 └──────────────────────────────────────┘
@@ -139,7 +139,8 @@ Empower YouTube creators with AI-driven audience intelligence — turning thousa
 ### Agent Orchestration & LLM
 - **LangGraph** 0.2+ — state machine orchestration (replaces chains)
 - **LangChain** 0.3+ — core abstractions
-- **OpenAI Python Client** 1.51+ — compatible with both OpenRouter and Ollama
+- **LangChain Groq** 0.2+ — Groq integration for production inference
+- **OpenAI Python Client** 1.51+ — OpenAI-compatible client for local Ollama
 - **Tenacity** 9.0+ — automatic retries with exponential backoff
 
 ### NLP & Embeddings
@@ -177,13 +178,14 @@ Empower YouTube creators with AI-driven audience intelligence — turning thousa
 # YouTube API
 YOUTUBE_API_KEY=<required>
 
-# LLM Backend (choose one)
-OPENROUTER_API_KEY=<if using OpenRouter>
+# Production LLM
+GROQ_API_KEY=<required in production>
+USE_LOCAL_LLM=false
+LLM_MODEL=openai/gpt-oss-20b
+
+# Optional local LLM
 OLLAMA_BASE_URL=http://localhost:11434  # if using local Ollama
 OLLAMA_MODEL=qwen3.5:0.8b  # or gemma3:1b, etc.
-
-# Optional: override default model
-LLM_MODEL=anthropic/claude-3.5-sonnet:beta  # OpenRouter model ID
 
 # Storage Paths
 CHROMA_PERSIST_DIR=./data/vectorstore
@@ -223,7 +225,7 @@ tubeinsight-ai/
 │   │
 │   ├── core/
 │   │   ├── youtube_client.py           # YouTube API wrapper (fetch metadata, comments)
-│   │   ├── llm_client.py               # OpenAI-compatible client (OpenRouter/Ollama)
+│   │   ├── llm_client.py               # ChatGroq production / Ollama local client
 │   │   ├── embeddings.py               # sentence-transformers wrapper
 │   │   ├── vectorstore.py              # ChromaDB wrapper (upsert, query, delete)
 │   │   └── ollama_startup.py           # Auto-start Ollama service
@@ -335,10 +337,10 @@ tubeinsight-ai/
 | **Sentiment Analysis** (100 comments, 3 chunks, 800 tokens each) | ~$0.02-0.10 (depends on LLM) |
 | **Topic Labeling** (6 clusters × 100 tokens) | ~$0.01-0.05 |
 | **Report Synthesis** (1000 tokens) | ~$0.01-0.05 |
-| **Total per video (OpenRouter/Claude)** | ~$0.04-0.20 |
+| **Total per video (Groq GPT-OSS 20B)** | ~$0.04-0.20 |
 | **Total per video (local Ollama)** | $0 |
 
-Full channel (10 videos): ~$0.40-2.00 with OpenRouter; $0 with Ollama.
+Full channel (10 videos): ~$0.40-2.00 with Groq; $0 with Ollama.
 
 ---
 
@@ -391,7 +393,7 @@ Full channel (10 videos): ~$0.40-2.00 with OpenRouter; $0 with Ollama.
 - **Performance**: Single video analysis < 60 seconds, channel analysis < 10 minutes
 - **Accuracy**: LLM-generated topics align with comment themes (manual validation)
 - **Usability**: Creators can interpret insights without AI background
-- **Cost**: Per-video cost < $0.20 with OpenRouter; $0 with Ollama
+- **Cost**: Per-video cost < $0.20 with Groq; $0 with Ollama
 - **Reliability**: 99% uptime for ChromaDB queries, <1% API failure rate
 
 ---
@@ -401,7 +403,7 @@ Full channel (10 videos): ~$0.40-2.00 with OpenRouter; $0 with Ollama.
 ### Prerequisites
 - Python 3.11+
 - YouTube Data API key
-- Either: OpenRouter API key OR local Ollama instance
+- Either: Groq API key OR local Ollama instance
 
 ### Installation
 

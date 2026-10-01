@@ -1,5 +1,6 @@
 # ─── Core LLM & Agent Stack ───────────────────────────────────────────────────
 langchain>=0.3.0
+langchain-groq>=0.2.0
 langgraph>=0.2.0
 langchain-community>=0.3.0
 langchain-chroma>=0.1.0
@@ -10,7 +11,7 @@ google-auth>=2.35.0
 
 # ─── Vector Store & Embeddings ────────────────────────────────────────────────
 chromadb>=0.5.0
-openai>=1.51.0                    # OpenAI-compatible client for OpenRouter/Ollama
+openai>=1.51.0                    # OpenAI-compatible client for Ollama
 
 # ─── Sentiment & NLP ──────────────────────────────────────────────────────────
 bertopic>=0.16.0

@@ -36,6 +36,7 @@ class PipelineState(TypedDict):
     video_metadata: Optional[dict]
     raw_comments: Optional[list[dict]]
     clean_comments: Optional[list[dict]]
+    embeddings: Optional[list[list[float]]]
 
     # Sentiment Agent output
     sentiment_result: Optional[dict]
@@ -71,6 +72,7 @@ def run_data_agent(state: PipelineState) -> dict:
             "video_metadata": result.get("metadata"),
             "raw_comments": result.get("raw_comments", []),
             "clean_comments": clean_comments,
+            "embeddings": result.get("embeddings", []),
             "status": "data_complete",
         }
     except Exception as e:
@@ -135,6 +137,7 @@ def run_topic_agent(state: PipelineState) -> dict:
             video_id=state["video_id"],
             comments=clean_comments,
             video_title=state["video_metadata"]["title"],
+                embeddings=state.get("embeddings") or None,
         )
         return {"topic_result": result, "status": "topics_complete"}
     except Exception as e:
@@ -209,6 +212,7 @@ class TubeInsightPipeline:
             "video_metadata": None,
             "raw_comments": None,
             "clean_comments": None,
+            "embeddings": None,
             "sentiment_result": None,
             "topic_result": None,
             "report": None,
@@ -252,6 +256,7 @@ class TubeInsightPipelineWithProgress:
             "video_metadata": None,
             "raw_comments": None,
             "clean_comments": None,
+            "embeddings": None,
             "sentiment_result": None,
             "topic_result": None,
             "report": None,
@@ -260,7 +265,12 @@ class TubeInsightPipelineWithProgress:
         }
         
         # Stage 1: Data Agent (15-35%)
-        yield {"type": "progress", "stage": "fetching_data", "progress": 15, "message": "Fetching comments..."}
+        yield {
+            "type": "progress",
+            "stage": "fetching_data",
+            "progress": 15,
+            "message": "Fetching comments and preparing the comment index...",
+        }
         
         data_result = run_data_agent(state)
         state.update(data_result)
@@ -271,7 +281,12 @@ class TubeInsightPipelineWithProgress:
             return
         
         comment_count = len(state.get("clean_comments", []))
-        yield {"type": "progress", "stage": "fetching_data", "progress": 35, "message": f"Fetched {comment_count} comments"}
+        yield {
+            "type": "progress",
+            "stage": "fetching_data",
+            "progress": 35,
+            "message": f"Fetched and indexed {comment_count} comments",
+        }
         
         # Stage 2: Sentiment Agent (35-60%)
         yield {"type": "progress", "stage": "analyzing_sentiment", "progress": 40, "message": "Analyzing sentiment..."}

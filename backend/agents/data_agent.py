@@ -81,6 +81,7 @@ class DataAgent:
                 "metadata": metadata,
                 "raw_comments": raw_comments,
                 "clean_comments": [],
+                "embeddings": [],
             }
 
         # Embed and store (skip if already indexed)
@@ -95,9 +96,11 @@ class DataAgent:
             logger.info(f"Successfully stored comments for video {video_id}")
         else:
             logger.info(f"Video {video_id} already indexed, skipping re-embedding")
+            embeddings = []
 
         return {
             "metadata": metadata,
             "raw_comments": raw_comments,
             "clean_comments": clean_comments,
+            "embeddings": embeddings,
         }

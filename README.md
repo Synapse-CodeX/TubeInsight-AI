@@ -8,7 +8,7 @@
 [![Vite](https://img.shields.io/badge/Vite-Frontend-646CFF.svg)](https://vitejs.dev/)
 [![LangGraph](https://img.shields.io/badge/LangGraph-Agent%20Orchestration-green.svg)](https://github.com/langchain-ai/langgraph)
 [![ChromaDB](https://img.shields.io/badge/ChromaDB-Vector%20Store-purple.svg)](https://www.trychroma.com/)
-[![OpenRouter](https://img.shields.io/badge/LLM-OpenRouter-orange.svg)](https://openrouter.ai/)
+[![Groq](https://img.shields.io/badge/LLM-Groq-orange.svg)](https://groq.com/)
 [![YouTube API](https://img.shields.io/badge/YouTube-Data%20API%20v3-red.svg)](https://developers.google.com/youtube/v3)
 
 ---
@@ -259,8 +259,8 @@ tubeinsight-ai/
 | Backend             | FastAPI                             |
 | API Server          | Uvicorn                             |
 | Agent Orchestration | LangGraph                           |
-| LLM Gateway         | OpenAI-compatible client            |
-| LLM Provider        | OpenRouter                          |
+| LLM Gateway         | LangChain ChatGroq                  |
+| LLM Provider        | Groq (`openai/gpt-oss-20b`)         |
 | YouTube Data        | YouTube Data API v3                 |
 | Embeddings          | Sentence Transformers               |
 | Embedding Model     | `all-MiniLM-L6-v2`                  |
@@ -278,7 +278,7 @@ tubeinsight-ai/
 
 # 🤖 LLM Architecture
 
-The project uses an OpenAI-compatible client abstraction so the LLM provider can be changed without rewriting the agent layer.
+The project uses a stable `LLMClient` abstraction so the agent layer does not depend on a provider SDK. Production uses Groq through LangChain `ChatGroq`; local development can use Ollama through its OpenAI-compatible API.
 
 Current development configuration:
 
@@ -289,7 +289,7 @@ TubeInsight AI
    LLMClient
        │
        ▼
- OpenRouter API
+ Groq API
        │
        ▼
  Configured LLM Model
@@ -499,11 +499,11 @@ YOUTUBE_API_KEY=your_youtube_api_key
 # LLM
 # ─────────────────────────────────────────────
 
-OPENROUTER_API_KEY=your_openrouter_api_key
+GROQ_API_KEY=your_groq_api_key
 
 USE_LOCAL_LLM=false
 
-LLM_MODEL=your_openrouter_model
+LLM_MODEL=openai/gpt-oss-20b
 
 
 # ─────────────────────────────────────────────
@@ -559,20 +559,20 @@ Create a Google Cloud project, enable the YouTube Data API v3, and generate an A
 
 ---
 
-## OpenRouter
+## Groq
 
-TubeInsight AI currently uses OpenRouter for cloud-based LLM inference.
+TubeInsight AI uses Groq with `openai/gpt-oss-20b` for cloud-based LLM inference.
 
-Add your OpenRouter API key to:
+Add your Groq API key to:
 
 ```env
-OPENROUTER_API_KEY=your_key_here
+GROQ_API_KEY=your_groq_api_key
 ```
 
 The configured model is controlled through:
 
 ```env
-LLM_MODEL=your_model_id
+LLM_MODEL=openai/gpt-oss-20b
 ```
 
 ---
@@ -637,7 +637,7 @@ Then configure:
 
 ```env
 YOUTUBE_API_KEY=...
-OPENROUTER_API_KEY=...
+GROQ_API_KEY=...
 ```
 
 ---
@@ -762,7 +762,7 @@ Never expose:
 
 ```text
 YOUTUBE_API_KEY
-OPENROUTER_API_KEY
+GROQ_API_KEY
 ```
 
 in frontend code or commit them to the repository.
@@ -813,7 +813,7 @@ The intended deployment architecture separates the frontend and backend.
                     ┌───────────┼───────────┐
                     │           │           │
                     ▼           ▼           ▼
-                YouTube     OpenRouter   ChromaDB
+                YouTube       Groq       ChromaDB
                    API          API
 ```
 
@@ -837,7 +837,7 @@ Environment variables such as:
 
 ```text
 YOUTUBE_API_KEY
-OPENROUTER_API_KEY
+GROQ_API_KEY
 LLM_MODEL
 CHROMA_PERSIST_DIR
 ```

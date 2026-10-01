@@ -9,6 +9,7 @@ print(f"[LOADING] {__file__}")
 
 import re
 import json
+import httplib2
 from pathlib import Path
 from typing import Optional, List, Dict
 from loguru import logger
@@ -55,7 +56,13 @@ class YouTubeClient:
                 "Please set a valid API key in your .env file."
             )
 
-        self.service = build("youtube", "v3", developerKey=settings.youtube_api_key)
+        self.service = build(
+            "youtube",
+            "v3",
+            developerKey=settings.youtube_api_key,
+            http=httplib2.Http(timeout=30),
+            cache_discovery=False,
+        )
         self.raw_dir = Path(settings.raw_data_dir)
         self.raw_dir.mkdir(parents=True, exist_ok=True)
 

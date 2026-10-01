@@ -41,6 +41,7 @@ class TopicAgent:
         self,
         comments: List[Dict],
         n_clusters: int = 6,
+        embeddings: List[List[float]] | None = None,
     ) -> List[Dict]:
         """
         KMeans clustering on comment embeddings.
@@ -54,8 +55,8 @@ class TopicAgent:
         """
         texts = [c["text"] for c in comments]
 
-        # Get embeddings
-        embeddings = self.embedder.embed_texts(texts)
+        # Reuse DataAgent embeddings when available to avoid a second model pass.
+        embeddings = embeddings or self.embedder.embed_texts(texts)
         X = np.array(embeddings)
         X = normalize(X)  # Normalize for cosine similarity
 
@@ -94,6 +95,7 @@ class TopicAgent:
         comments: List[Dict],
         video_title: str,
         n_clusters: int = 6,
+        embeddings: List[List[float]] | None = None,
     ) -> Dict:
         """
         Cluster comments and label them with LLM.
@@ -113,7 +115,11 @@ class TopicAgent:
             n_clusters = max(2, len(comments) // 2)
 
         # Cluster
-        raw_clusters = self._cluster_comments(comments, n_clusters=n_clusters)
+        raw_clusters = self._cluster_comments(
+            comments,
+            n_clusters=n_clusters,
+            embeddings=embeddings,
+        )
         logger.debug(f"Formed {len(raw_clusters)} clusters")
 
         # Label with LLM

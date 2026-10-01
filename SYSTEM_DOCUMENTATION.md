@@ -93,7 +93,7 @@
         │  └─────────────────────────────┘   │
         │  ┌─────────────────────────────┐   │
         │  │ LLM Client                  │   │
-        │  │ (OpenRouter/Ollama)         │   │
+        │  │ (Groq/Ollama)               │   │
         │  └─────────────────────────────┘   │
         │  ┌─────────────────────────────┐   │
         │  │ Embedding Client            │   │
@@ -108,7 +108,7 @@
 ┌───────────────────────▼──────────────────────────┐
 │           EXTERNAL SERVICES & DATA               │
 │  ┌──────────────┐  ┌──────────────────────────┐ │
-│  │YouTube API   │  │Local Ollama / OpenRouter │ │
+│  │YouTube API   │  │Groq / Local Ollama      │ │
 │  │(Comments,    │  │(LLM Models)              │ │
 │  │Metadata)     │  │                          │ │
 │  └──────────────┘  └──────────────────────────┘ │
@@ -155,7 +155,7 @@ User Input
 └──────────────────────────────────────────────────────┘
      │                  │              │         │
      ▼                  ▼              ▼         ▼
-  YouTube API      Ollama/OpenRouter  ST Model  ChromaDB
+    YouTube API      Groq/Ollama       ST Model  ChromaDB
 ```
 
 ---
@@ -209,22 +209,22 @@ User Input
   final_state = pipeline.invoke(initial_state)  # Execute
   ```
 
-#### **LLM Client** (OpenAI-compatible)
+#### **LLM Client** (Groq production / Ollama local)
 - **What**: Abstraction layer for LLM API calls
 - **Why**:
-  - Swappable: Works with OpenRouter (cloud) or Ollama (local)
+    - Production: Uses Groq `openai/gpt-oss-20b` through `ChatGroq`
+    - Local development: Uses Ollama through its OpenAI-compatible API
   - Built-in retry logic (Tenacity library)
   - Rate limiting to avoid API errors
 - **Where**: `backend/core/llm_client.py`
 - **When**: Called by SentimentAgent, TopicAgent, ReportAgent, RAGAgent
 - **How**:
   ```python
-  client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key="...")
-  response = client.chat.completions.create(
-      model="anthropic/claude-3.5-sonnet",
-      messages=[{"role": "system", "content": "..."}, ...],
-      temperature=0.1
-  )
+  client = ChatGroq(api_key="...", model="openai/gpt-oss-20b")
+  response = client.invoke([
+      ("system", "..."),
+      ("user", "...")
+  ])
   ```
 
 #### **Tenacity** (Retry Logic)
@@ -1308,8 +1308,9 @@ class YouTubeClient:
 
 #### **backend/core/llm_client.py** (LLM Interface with Retry Logic)
 ```python
-"""OpenAI-compatible client supporting OpenRouter and Ollama."""
+"""LLM client supporting Groq production and Ollama local development."""
 
+from langchain_groq import ChatGroq
 from openai import OpenAI
 from tenacity import retry, stop_after_attempt, wait_exponential
 from config.settings import get_settings
@@ -1326,9 +1327,9 @@ class LLMClient:
             )
             self.model = settings.ollama_model
         else:
-            self.client = OpenAI(
-                base_url="https://openrouter.ai/api/v1",
-                api_key=settings.openrouter_api_key
+            self.client = ChatGroq(
+                api_key=settings.groq_api_key,
+                model=settings.llm_model
             )
             self.model = settings.llm_model
 
@@ -1641,7 +1642,7 @@ TIME     EVENT                           FILE(S)                    STATE
          │  ├─ Call: LLMClient.complete_json()
          │  │  ├─ Retry decorator active (max 5 attempts)
          │  │  ├─ Rate limiter: wait 1s before request
-         │  │  ├─ Send to OpenRouter/Ollama
+         │  │  ├─ Send to Groq/Ollama
          │  │  └─ LLM processes: 800 input tokens~0.2s
          │  └─ Returns sentiment JSON
          │
@@ -1758,9 +1759,10 @@ streamlit run frontend/app.py  # Runs on :8501
 
 ### 8.2 Production Deployment
 ```bash
-# Use OpenRouter instead of Ollama
-OLLAMA_BASE_URL=""  # Empty = use OpenRouter
-OPENROUTER_API_KEY="sk-or-v1-..."
+# Use Groq in production instead of Ollama
+USE_LOCAL_LLM=false
+GROQ_API_KEY="your_groq_api_key"
+LLM_MODEL="openai/gpt-oss-20b"
 
 streamlit run frontend/app.py \
     --server.port 80 \
