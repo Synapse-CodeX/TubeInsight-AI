@@ -6,9 +6,12 @@ TubeInsight AI — FastAPI Backend
 Exposes the LangGraph agent pipeline and RAG chat as REST endpoints.
 """
 
+import asyncio
+import queue
 import sys
 import json
 import os
+import threading
 from datetime import datetime
 from typing import Optional, Generator
 from contextlib import asynccontextmanager
@@ -489,6 +492,44 @@ def generate_progress_events(
         })
 
 
+async def generate_progress_events_with_heartbeat(
+    video_url: str,
+    video_id: str,
+    max_comments: int,
+    yt: YouTubeClient,
+):
+    """Run the existing sync stream off the event loop and keep SSE alive."""
+    event_queue: queue.Queue = queue.Queue()
+    completed = object()
+
+    def produce_events() -> None:
+        try:
+            for event in generate_progress_events(
+                video_url=video_url,
+                video_id=video_id,
+                max_comments=max_comments,
+                yt=yt,
+            ):
+                event_queue.put(event)
+        finally:
+            event_queue.put(completed)
+
+    threading.Thread(target=produce_events, daemon=True).start()
+
+    while True:
+        try:
+            event = await asyncio.to_thread(event_queue.get, True, 15)
+        except queue.Empty:
+            # SSE comments are ignored by the existing frontend data parser.
+            yield ": keepalive\n\n"
+            continue
+
+        if event is completed:
+            return
+
+        yield event
+
+
 @app.post("/analyze/stream")
 async def analyze_video_stream(request: AnalyzeRequest):
     """
@@ -514,7 +555,7 @@ async def analyze_video_stream(request: AnalyzeRequest):
         )
     
     return StreamingResponse(
-        generate_progress_events(
+        generate_progress_events_with_heartbeat(
             video_url=request.youtube_url,
             video_id=video_id,
             max_comments=request.max_comments or 100,

@@ -846,6 +846,32 @@ will be configured through the deployment platform rather than committed to GitH
 
 ---
 
+## Hugging Face Spaces Deployment
+
+The FastAPI backend can run in a parallel Hugging Face Space while the existing Render deployment remains active.
+
+Use Python 3.12 and expose port `7860`. The container startup command is:
+
+```bash
+uvicorn api:app --host 0.0.0.0 --port 7860
+```
+
+Set these Space secrets/environment variables:
+
+```env
+YOUTUBE_API_KEY=your_youtube_api_key
+GROQ_API_KEY=your_groq_api_key
+USE_LOCAL_LLM=false
+LLM_MODEL=openai/gpt-oss-20b
+USE_LOCAL_EMBEDDING_MODEL=true
+SENTENCE_TRANSFORMER_MODEL=all-MiniLM-L6-v2
+FRONTEND_URL=https://tube-insight-ai-puce.vercel.app
+CHROMA_PERSIST_DIR=/data/vectorstore
+RAW_DATA_DIR=/data/raw
+```
+
+Attach persistent storage mounted at `/data` if ChromaDB and raw comment files must survive Space restarts. Verify the deployment with `GET /health`, then test a single-video `POST /analyze/stream` request from the Vercel frontend configuration.
+
 # 🌟 Why TubeInsight AI?
 
 YouTube generates enormous amounts of audience feedback.
