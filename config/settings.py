@@ -29,8 +29,8 @@ class Settings(BaseSettings):
     # ── Model Config ──────────────────────────────────────────────────────────
     # Set OLLAMA_BASE_URL to use local Ollama instead of OpenRouter
     # Example: OLLAMA_BASE_URL=http://localhost:11434
-    ollama_base_url: str = Field(env="OLLAMA_BASE_URL")
-    ollama_model: str = Field(env="OLLAMA_MODEL")
+    ollama_base_url: str = Field("", env="OLLAMA_BASE_URL")
+    ollama_model: str = Field("", env="OLLAMA_MODEL")
     # OpenRouter model ID (used if OLLAMA_BASE_URL is not set)
     llm_model: str = Field(env="LLM_MODEL")
 
